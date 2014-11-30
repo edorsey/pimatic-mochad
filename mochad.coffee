@@ -33,6 +33,17 @@ module.exports = (env) ->
         createCallback: (config) => new Mochad(@framework, config)
       })
 
+      @framework.on "after init", =>
+        # Check if the mobile-frontent was loaded and get a instance
+        mobileFrontend = @framework.pluginManager.getPlugin 'mobile-frontend'
+        if mobileFrontend?
+          mobileFrontend.registerAssetFile 'js', "pimatic-mochad/app/mochad-device.coffee"
+          mobileFrontend.registerAssetFile 'css', "pimatic-mochad/app/css/mochad-device.css"
+          mobileFrontend.registerAssetFile 'html', "pimatic-mochad/app/mochad-device.jade"
+        else
+          env.logger.warn "your plugin could not find the mobile-frontend. No gui will be available"
+
+
   # #### Mochad class
   class Mochad extends env.devices.Sensor
 
@@ -241,7 +252,7 @@ module.exports = (env) ->
     #  * `deviceConfig`
     #
     constructor: (@Mochad, uconf) ->
-      super()
+      super @Mochad, uconf
 
     template: "mochad-dimmer"
 
