@@ -1,5 +1,7 @@
 # Mochad plugin
 
+t = require('decl-api').types
+
 module.exports = (env) ->
 
   # Require the bluebird promise library
