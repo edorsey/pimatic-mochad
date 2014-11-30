@@ -22,4 +22,6 @@ $(document).on( "pagebeforecreate", (event) ->
           # element could be not existing anymore
           pimatic.try( => @sliderEle.flipswitch('enable'))
         ).fail(ajaxAlertFail)
+
+  pimatic.MochadDimmerItem = MochadDimmerItem;
 )

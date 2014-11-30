@@ -211,7 +211,7 @@ module.exports = (env) ->
 
       env.logger.debug("Initiated unit with: housecode='#{@housecode}', unitcode='#{@unitcode}, id='#{@id}', name='#{@name}', protocol='#{@protocol}'")
 
-      super()
+      super @Mochad, uconf
 
     # ####changeStateTo()
     #
