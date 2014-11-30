@@ -5,7 +5,6 @@ script#mochad-dimmer-template(type='text/template')
       div.ui-controlgroup-controls
         a.shutter-down.ui-first-child.ui-btn.ui-corner-all.ui-icon-arrow-d.ui-btn-icon-left(href='#')=__('Down')
         a.shutter-up.ui-last-child.ui-btn.ui-corner-all.ui-icon-arrow-u.ui-btn-icon-left(href='#')=__('Up')
-    select.switch(
-      data-bind="attr: { id: switchId }, value: switchState")
+    select.switch()
       option(value="off")=__('Off')
       option(value="on")=__('On')
