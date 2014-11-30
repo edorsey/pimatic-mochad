@@ -252,14 +252,6 @@ module.exports = (env) ->
     #  * `deviceConfig`
     #
     constructor: (@Mochad, uconf) ->
-      @id        = uconf.id
-      @name      = uconf.name
-      @housecode = uconf.housecode.toLowerCase()
-      @unitcode  = parseInt(uconf.unitcode, 10)
-      @protocol  = uconf.protocol
-
-      env.logger.debug("Initiated unit with: housecode='#{@housecode}', unitcode='#{@unitcode}, id='#{@id}', name='#{@name}', protocol='#{@protocol}'")
-
       super()
 
     template: "mochad-dimmer"
@@ -301,7 +293,7 @@ module.exports = (env) ->
         .matchDevice(mochadDevices, (m, d) =>
           m.match(' to send ')
             .matchStringWithVars((m, ct) =>
-              if device? and device.id isnt d.id
+              if device? and d? and device.id isnt d.id
                 context?.addError(""""#{input.trim()}" is ambiguous.""")
                 return
               device = d
@@ -353,7 +345,7 @@ module.exports = (env) ->
         .matchDevice(mochadDevices, (m, d) =>
           m.match([' receives ', ' sends '], (m, s) ->
             m.matchStringWithVars((m, ct) =>
-              if device? and device.id isnt d.id
+              if device? and d? and device.id isnt d.id
                 context?.addError(""""#{input.trim()}" is ambiguous.""")
                 return
               device = d

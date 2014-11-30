@@ -1,6 +1,6 @@
 $(document).on( "pagebeforecreate", (event) ->
 
-  class MochadDimmerItem extends env.devices.SwitchItem
+  class MochadDimmerItem extends pimatic.SwitchItem
 
     getTemplateName: -> "mochad-dimmer"
 
