@@ -55,11 +55,15 @@ module.exports = (env) ->
         switch uconf.class
           when "MochadSwitch"
             unit = new MochadSwitch(@, uconf)
-            @unitsContainer[unit.housecode] ||= {}
-            if @unitsContainer[unit.housecode][unit.unitcode]
-              throw new Error "Unit #{unit.housecode}#{unit.unitcode} not unique in configuration"
-            @framework.deviceManager.registerDevice(unit)
-            @unitsContainer[unit.housecode][unit.unitcode] = unit;
+          when "MochadDimmer"
+            unit = new MochadDimmer(@, uconf)
+
+        if unit?
+          @unitsContainer[unit.housecode] ||= {}
+          if @unitsContainer[unit.housecode][unit.unitcode]
+            throw new Error "Unit #{unit.housecode}#{unit.unitcode} not unique in configuration"
+          @framework.deviceManager.registerDevice(unit)
+          @unitsContainer[unit.housecode][unit.unitcode] = unit;
 
       @connection = null
       @initConnection(@host, @port)
@@ -203,6 +207,34 @@ module.exports = (env) ->
     #
     changeStateTo: (state) ->
       @Mochad.sendCommand("#{@protocol} #{@housecode}#{@unitcode} " + ( if state then "on" else "off" ))
+
+  # #### MochadSwitch class
+  class MochadDimmer extends env.devices.ShutterController
+
+    # ####constructor()
+    #
+    # #####params:
+    #  * `deviceConfig`
+    #
+    constructor: (@Mochad, uconf) ->
+      @id        = uconf.id
+      @name      = uconf.name
+      @housecode = uconf.housecode.toLowerCase()
+      @unitcode  = parseInt(uconf.unitcode, 10)
+      @protocol  = uconf.protocol
+
+      env.logger.debug("Initiated unit with: housecode='#{@housecode}', unitcode='#{@unitcode}, id='#{@id}', name='#{@name}', protocol='#{@protocol}'")
+
+      super()
+
+    # ####changeStateTo()
+    #
+    # #####params:
+    #  * `state`
+    #
+    moveToPosition: (direction) ->
+      @Mochad.sendCommand("#{@protocol} #{@housecode}#{@unitcode} " + ( if direction is "up" then "bright" else "dim" ))
+
 
   # TODO Needs to be implemented
   class MochadActionProvider extends env.actions.ActionProvider
