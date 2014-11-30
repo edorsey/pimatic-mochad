@@ -31,6 +31,17 @@ module.exports = (env) ->
         createCallback: (config) => new Mochad(@framework, config)
       })
 
+      @framework.on "after init", =>
+        # Check if the mobile-frontent was loaded and get a instance
+        mobileFrontend = @framework.pluginManager.getPlugin 'mobile-frontend'
+        if mobileFrontend?
+          mobileFrontend.registerAssetFile 'js', "app/mochad-device.coffee"
+          mobileFrontend.registerAssetFile 'css', "app/css/mochad-device.css"
+          mobileFrontend.registerAssetFile 'html', "app/mochad-device.jade"
+        else
+          env.logger.warn "your plugin could not find the mobile-frontend. No gui will be available"
+
+
   # #### Mochad class
   class Mochad extends env.devices.Sensor
 
@@ -209,7 +220,29 @@ module.exports = (env) ->
       @Mochad.sendCommand("#{@protocol} #{@housecode}#{@unitcode} " + ( if state then "on" else "off" ))
 
   # #### MochadSwitch class
-  class MochadDimmer extends env.devices.ShutterController
+  class MochadDimmer extends MochadSwitch
+
+    actions:
+      turnOn:
+        description: "turns the switch on"
+      turnOff:
+        description: "turns the switch off"
+      changeStateTo:
+        description: "changes the switch to on or off"
+        params:
+          state:
+            type: t.boolean
+      toggle:
+        description: "toggle the state of the switch"
+      getState:
+        description: "returns the current state of the switch"
+        returns:
+          state:
+            type: t.boolean
+      brighten:
+        description: "brighten the light"
+      dim:
+        description: "dim the light"
 
     # ####constructor()
     #
@@ -227,13 +260,22 @@ module.exports = (env) ->
 
       super()
 
+    template: "mochad-dimmer"
+
     # ####changeStateTo()
     #
     # #####params:
     #  * `state`
     #
-    moveToPosition: (direction) ->
+    changeLux: (direction) ->
       @Mochad.sendCommand("#{@protocol} #{@housecode}#{@unitcode} " + ( if direction is "up" then "bright" else "dim" ))
+
+    brighten: () ->
+      @changeLux 'up'
+
+    dim: () ->
+      @changeLux 'down'
+
 
 
   # TODO Needs to be implemented
