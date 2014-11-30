@@ -23,5 +23,6 @@ $(document).on( "pagebeforecreate", (event) ->
           pimatic.try( => @sliderEle.flipswitch('enable'))
         ).fail(ajaxAlertFail)
 
-  pimatic.MochadDimmerItem = MochadDimmerItem;
+  pimatic.MochadDimmerItem = MochadDimmerItem
+  pimatic.templateClasses['mochad-dimmer'] = MochadDimmerItem
 )
