@@ -4,6 +4,12 @@ $(document).on( "pagebeforecreate", (event) ->
 
     getTemplateName: -> "mochad-dimmer"
 
+    constructor: (data) ->
+      super(data)
+      # Do something, after create: console.log(this)
+    afterRender: (elements) ->
+      super(elements)
+
     onShutterDownClicked: ->
         @_ajaxCall('dim')
 

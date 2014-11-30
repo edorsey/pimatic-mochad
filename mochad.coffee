@@ -256,6 +256,8 @@ module.exports = (env) ->
 
     template: "mochad-dimmer"
 
+    getTemplateName: -> "mochad-dimmer"
+
     # ####changeStateTo()
     #
     # #####params:
